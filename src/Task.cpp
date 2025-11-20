@@ -3,7 +3,7 @@
 
 Task::Task(const std::string &description) : description(description) {}
 
-std::string Task::toString() {
+std::string Task::toString() const {
     std::ostringstream toString;
     toString << "Completed: ";
     if (this->completed) toString << "yes; Description: " << this->description;
