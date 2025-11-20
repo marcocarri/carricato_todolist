@@ -12,5 +12,9 @@ add_executable(carricato_todolist main.cpp
         inc/TimeOfDay.h
         src/Date.cpp
         src/TimeOfDay.cpp
+        inc/DateTime.h
+        src/DateTime.cpp
+        inc/Location.h
+        src/Location.cpp
 
 )
