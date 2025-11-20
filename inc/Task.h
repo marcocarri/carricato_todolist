@@ -27,8 +27,8 @@ public:
     void setDateTime(const DateTime& date_time);
     void setLocation(const Location& location);
 
-    void save();
-    void load();
+    void save(std::ostream& outstream) const;
+    void load(std::istream& instream);
 
 };
 

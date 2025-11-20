@@ -23,7 +23,7 @@ public:
     void removeTask(size_t index);
     Task& getTask(size_t index);
 
-    void saveToFile();
+    void saveToFile() const;
     void loadFromFile();
 };
 

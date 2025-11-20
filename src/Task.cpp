@@ -39,3 +39,26 @@ void Task::setDateTime(const DateTime &date_time) {
 void Task::setLocation(const Location& location) {
     this->location=location;
 }
+
+void Task::save(std::ostream& outstream) const {
+    std::string output="";
+    output+=this->date_time.getDate().toString()+"|"+this->date_time.getTime().toString()+"|"+this->location.getAddress()+"|"+std::to_string(this->completed)+"|"+this->description;
+    outstream << output << std::endl;
+}
+void Task::load(std::istream& instream) {
+    std::string date, time, location, completed;
+    if (!std::getline(instream,date,'|')) return;
+    if (!std::getline(instream,time,'|')) return;
+    try {
+        this->date_time=DateTime(date,time);
+    } catch (const std::invalid_argument&) {
+        instream.setstate(std::ios::failbit);
+        return;
+    }
+    if (!std::getline(instream,location,'|')) return;
+    this->location=Location(location);
+    if (!std::getline(instream,completed,'|')) return;
+    if (completed.compare("1")==0) this->completed=true;
+    else this->completed=false;
+    if (!std::getline(instream,description)) return;
+}
