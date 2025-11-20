@@ -1,5 +1,6 @@
 #include "../inc/ToDoList.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <ostream>
@@ -53,6 +54,24 @@ Task& ToDoList::getTask(size_t index) {
         throw std::out_of_range("Indice task non valido.");
     }
     return tasks.at(index);
+}
+std::vector<Task> ToDoList::getSortedTasksByDateTimeDescending() const {
+    std::vector<Task> sortedTasks = tasks;
+    std::sort(sortedTasks.begin(), sortedTasks.end(),
+        [](const Task& t1,const Task& t2) {
+            return t1.getDateTime()>t2.getDateTime();
+        }
+    );
+    return sortedTasks;
+}
+std::vector<Task> ToDoList::getSortedTasksByDateTimeAscending() const {
+    std::vector<Task> sortedTasks = tasks;
+    std::sort(sortedTasks.begin(), sortedTasks.end(),
+        [](const Task& t1,const Task& t2) {
+            return t1.getDateTime()<t2.getDateTime();
+        }
+    );
+    return sortedTasks;
 }
 
 void ToDoList::saveToFile() const {
