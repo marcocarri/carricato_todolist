@@ -5,17 +5,22 @@
 
 using namespace std;
 
-std::string readStringInput(const string& prompt);
-Date readDateInput(const string& prompt);
-TimeOfDay readTimeInput(const string& prompt);
-Location readLocationInput(const string& prompt);
-size_t readIndex(const string& prompt,size_t maxIndex);
-void clearInputBuffer();
-DateTime getCurrentDateTime();
-void displayMainMenu();
-void displaySubMenu1();
-void displaySubMenu2();
-void displaySubMenu3();
+//funzioni di input
+std::string readStringInput(const string& prompt); //legge input quando devo inserire una stringa
+Date readDateInput(const string& prompt); //legge input quando vado ad inserire una data e restituisce un oggetto date
+TimeOfDay readTimeInput(const string& prompt); //legge input quando vado ad inserire una data e restituisce un oggetto time
+Location readLocationInput(const string& prompt); //legge input quando vado ad inserire un luogo e restituisce un oggetto location
+size_t readIndex(const string& prompt,size_t maxIndex); //legge input quando vado ad inserire un indice
+void clearInputBuffer(); //pulisce il buffer di input in caso di errore di lettura
+
+//funzioni utility
+DateTime getCurrentDateTime(); //restituisce un oggetto DateTime con la data e l'orario attuale
+
+//funzioni di display
+void displayMainMenu(); //stampa menù principale
+void displaySubMenu1(); //stampa menù di completamento task
+void displaySubMenu2(); //stampa menù di modifica task
+void displaySubMenu3(); //stampa menù di sorting/filtering dell'elenco delle task
 
 //1 aggiungere task
 //2 rimuovere task
@@ -49,10 +54,10 @@ int main() {
     while (choice!=0) {
         displayMainMenu();
         cout << "Scelta: ";
-        if (!(cin >> choice)) { clearInputBuffer(); continue; }
+        if (!(cin >> choice)) { clearInputBuffer(); continue; } //controllo che la lettura avvenga correttamente
         try {
             switch (choice) {
-                case 1: {
+                case 1: { //aggiungere task
                     string description = readStringInput("Inserisci la descrizione della nuova Task: ");
                     Date tempDate=readDateInput("Inserisci la data (GG-MM-AAAA): ");
                     TimeOfDay tempTime=readTimeInput("Inserisci l'orario (HH:MM:SS): ");
@@ -61,133 +66,133 @@ int main() {
                     list.addTask(description, date_time, location);
                     cout << "Task aggiunta con successo!" << endl;
                 } break;
-                case 2: {
-                    if (list.getTasks().empty()) {
+                case 2: { //rimuovere task
+                    if (list.getTasks().empty()) { //se il vettore è vuoto usciamo dal case
                         cout << "Nessuna task presente nella lista." << endl;
                         break;
                     }
                     cout << list.vectorToString(list.getTasks()) << endl;
                     size_t index=readIndex("Inserisci il numero della Task da rimuovere: ",list.getTasks().size());
-                    Task temp=list.getTask(index-1);
-                    list.removeTask(index-1);
+                    Task temp=list.getTask(index-1); //mi salvo la task in una variabile temporanea
+                    list.removeTask(index-1); //rimuovo la task
                     cout << "Dati Task da rimuovere --> " << temp.toString() << endl << "Task rimossa con successo!" << endl;
                 } break;
-                case 3: {
+                case 3: { //completare task
                     displaySubMenu1();
                     cout << "Scelta: ";
-                    if (!(cin >> sub_choice)) { clearInputBuffer(); continue; }
+                    if (!(cin >> sub_choice)) { clearInputBuffer(); continue; } //controllo che la lettura avvenga correttamente
                     switch (sub_choice) {
-                        case 1: {
-                            if (list.getTasks().empty()) {
+                        case 1: { //completare task a scelta
+                            if (list.getTasks().empty()) { //se il vettore è vuoto usciamo dal case
                                 cout << "Nessuna task presente nella lista." << endl;
                                 break;
                             }
                             cout << list.vectorToString(list.getTasks()) << endl;
                             size_t index=readIndex("Inserisci il numero della Task da completare: ",list.getTasks().size());
-                            list.getTask(index-1).markCompleted();
+                            list.getTask(index-1).markCompleted(); //segno la task come completa
                             cout << "Task [" << index << "] segnata come completata!" << endl;
                         } break;
-                        case 2: {
+                        case 2: { //auto-complete task vecchie
                             for (size_t i=0;i<list.getTasks().size();i++) {
                                 Task& task=list.getTask(i);
                                 if (!(task.isCompleted())&&(task.getDateTime()<getCurrentDateTime())) { task.markCompleted(); }
                             }
                             cout << "Task con data antecedente a quella attuale completate!" << endl;
                         } break;
-                        case 0: {} break;
+                        case 0: { /*torna indietro*/ } break;
                         default : {
                             cout << "Scelta non valida. Riprova." << endl;
                         } break;
                     }
                 } break;
-                case 4: {
+                case 4: { //modificare task
                     displaySubMenu2();
                     cout << "Scelta: ";
-                    if (!(cin >> sub_choice)) { clearInputBuffer(); continue; }
+                    if (!(cin >> sub_choice)) { clearInputBuffer(); continue; } //controllo che la lettura avvenga correttamente
                     size_t index=-1;
                     if (!(sub_choice==0)) {
-                        if (list.getTasks().empty()) {
+                        if (list.getTasks().empty()) { //se il vettore è vuoto usciamo dal case
                             cout << "Nessuna task presente nella lista." << endl;
                             break;
                         }
                         cout << list.vectorToString(list.getTasks()) << endl;
                         index=readIndex("Inserisci il numero della Task da modificare: ",list.getTasks().size());
-                        if (index==0) break;
+                        if (index==0) break; //per evitare che si verifichino errori se viene inserito un index errato se index==0 esco dal case
                     }
                     switch (sub_choice) {
-                        case 1: {
+                        case 1: { //modifica data
                             Date date=readDateInput("Inserisci la nuova data (GG-MM-AAAA): ");
                             Task& task=list.getTask(index-1);
                             task.setDateTime(DateTime(date,task.getDateTime().getTime()));
                             cout << "Data aggiornata con successo!" << endl;
                         } break;
-                        case 2: {
+                        case 2: { //modifica orario
                             TimeOfDay time=readTimeInput("Inserisci il nuovo orario (HH:MM:SS): ");
                             Task& task=list.getTask(index-1);
                             task.setDateTime(DateTime(task.getDateTime().getDate(),time));
                             cout << "Orario aggiornato con successo!" << endl;
                         } break;
-                        case 3: {
+                        case 3: { //modifica luogo
                             Location location=readLocationInput("Inserisci il nuovo luogo: ");
                             Task& task=list.getTask(index-1);
                             task.setLocation(location);
                             cout << "Luogo aggiornato con successo!" << endl;
                         } break;
-                        case 4: {
+                        case 4: { //modifica descrizione
                             std::string description=readStringInput("Inserisci la nuova descrizione: ");
                             Task& task=list.getTask(index-1);
                             task.setDescription(description);
                             cout << "Descrizione aggiornata con successo!" << endl;
                         } break;
-                        case 5: {
+                        case 5: { //modifica completamento
                             Task& task=list.getTask(index-1);
                             size_t temp=readIndex("Imposta la task come: 1 - Completata; 2 - Non Completata",2);
                             if (temp==1) task.markCompleted();
                             else if (temp==2) task.markPending();
-                            else { cout << "Operazione annullata (Input non valido)." << endl; break;}
+                            else { cout << "Operazione annullata (Input non valido)." << endl; break;} //verifica che l'utente abbia inserito 1 oppure 2
                             cout << "Completamento della Task aggiornato con successo!" << endl;
                         } break;
-                        case 0: {} break;
+                        case 0: { /*torna indietro*/ } break;
                         default : {
                             cout << "Scelta non valida. Riprova." << endl;
                         } break;
                     }
                 } break;
-                case 5: {
+                case 5: { //visualizzare elenco task
                     displaySubMenu3();
                     cout << "Scelta: ";
-                    if (!(cin >> sub_choice)) { clearInputBuffer(); continue; }
+                    if (!(cin >> sub_choice)) { clearInputBuffer(); continue; } //controllo che la lettura avvenga correttamente
                     switch (sub_choice) {
-                        case 1: {
+                        case 1: { //visualizza elenco task
                             cout << list.toString() << endl;
                         } break;
-                        case 2: {
+                        case 2: { //visualizza elenco task ordinata per data decrescente
                             cout << list.vectorToString(list.getSortedTasksByDateTimeDescending()) << endl;
                         } break;
-                        case 3: {
+                        case 3: { //visualizza elenco task ordinata per data crescente
                             cout << list.vectorToString(list.getSortedTasksByDateTimeAscending()) << endl;
                         } break;
-                        case 4: {
+                        case 4: { //visualizza elenco task completate
                             cout << list.vectorToString(list.getFilteredTasksByCompleted(true)) << endl;
                         } break;
-                        case 5: {
+                        case 5: { //visualizza elenco task NON completate
                             cout << list.vectorToString(list.getFilteredTasksByCompleted(false)) << endl;
                         } break;
-                        case 6: {
+                        case 6: { //visualizza elenco task in un determinata data
                             Date date=readDateInput("Inserisci la data (GG-MM-AAAA) di cui vuoi sapere le task: ");
                             cout << list.vectorToString(list.getFilteredTasksByDate(date)) << endl;
                         } break;
-                        case 7: {
+                        case 7: { //visualizza elenco task in un determinato luogo
                             Location location=readLocationInput("Inserisci il luogo di cui vuoi sapere le task: ");
                             cout << list.vectorToString(list.getFilteredTasksByLocation(location)) << endl;
                         } break;
-                        case 0: {} break;
+                        case 0: { /*torna indietro*/ } break;
                         default : {
                             cout << "Scelta non valida. Riprova." << endl;
                         } break;
                     }
                 } break;
-                case 0: {
+                case 0: { //esci
                     cout << "Salvataggio e chiusura. Arrivederci!" << endl;
                 } break;
                 default : {
@@ -206,11 +211,12 @@ int main() {
     return 0;
 }
 
+//funzioni di input
 size_t readIndex(const string& prompt, size_t maxIndex) {
-    if (maxIndex==0) return 0;
+    if (maxIndex==0) return 0; //se maxIndex=0 returna obbligatoriamente 0
     int index;
     cout << prompt;
-    if (!(cin >> index)||index<=0||(size_t)index>maxIndex) {
+    if (!(cin >> index)||index<=0||(size_t)index>maxIndex) { //verifica che l'inserimento sia corretto
         clearInputBuffer();
         cout << "Numero non valido. Deve essere tra 1 e " << maxIndex << endl;
         return 0;
@@ -224,7 +230,7 @@ std::string readStringInput(const string& prompt) {
     return string;
 }
 Date readDateInput(const string& prompt) {
-    while (true) {
+    while (true) { //while continua finchè non viene inserita una data corretta
         try {
             return Date(readStringInput(prompt));
         } catch (const std::invalid_argument& e) {
@@ -233,7 +239,7 @@ Date readDateInput(const string& prompt) {
     }
 }
 TimeOfDay readTimeInput(const string& prompt) {
-    while (true) {
+    while (true) { //while continua finchè non viene inserita un'orario corretto
         try {
             return TimeOfDay(readStringInput(prompt));
         } catch (const std::invalid_argument& e) {
@@ -249,6 +255,8 @@ void clearInputBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(),'\n');
     cout << "Input non valido. Riprova." << endl;
 }
+
+//funzioni utility
 DateTime getCurrentDateTime() {
     time_t rawtime;
     time(&rawtime);
@@ -257,6 +265,8 @@ DateTime getCurrentDateTime() {
     TimeOfDay time(timeinfo->tm_hour,timeinfo->tm_min,timeinfo->tm_sec);
     return DateTime(date,time);
 }
+
+//funzioni di display
 void displayMainMenu() {
     cout << "---- GESTIONE TASK LIST ----" << endl;
     cout << " 1  | Aggiungere Task" << endl;

@@ -2,22 +2,28 @@
 
 #include <sstream>
 
+//costruttori
 DateTime::DateTime(int day, int month, int year, int hour, int minute, int second) : date(day,month,year), time(hour,minute,second) {}
 DateTime::DateTime(const Date &date, const TimeOfDay &time) : date(date), time(time) {}
 DateTime::DateTime(const std::string &dateString, const std::string &timeString) : date(dateString), time(timeString) {}
+//tutti i controlli di correttezza vengono effettuati internamente ai costruttori di date e time
 
+//toString
 std::string DateTime::toString() const { //stampo DateTime nel formato GG-MM-AAAA HH:MM:SS
     std::ostringstream toString;
     toString << date.toString() << " " << time.toString();
     return toString.str();
 }
 
+//getter
 const Date &DateTime::getDate() const {
     return this->date;
 }
 const TimeOfDay &DateTime::getTime() const {
     return this->time;
 }
+
+//setter
 void DateTime::setDate(int day,int month,int year) {
     this->date.setDate(day,month,year);
 }
@@ -36,7 +42,9 @@ void DateTime::setTime(const TimeOfDay& time) {
 void DateTime::setTime(const std::string& time) {
     this->time.setTime(time);
 }
+//tutti i controlli di correttezza vengono effettuati internamente ai set di date e time
 
+//override operatori
 bool DateTime::operator==(const DateTime& other) const {
     return (this->date == other.date) && (this->time == other.time);
 }

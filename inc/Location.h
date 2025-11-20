@@ -8,10 +8,19 @@ private:
     std::string address;
 
 public:
+    //costruttore
     Location(const std::string& address);
+
+    //toString
     std::string toString() const;
+
+    //getter
     const std::string& getAddress() const;
+
+    //setter
     void setAddress(const std::string& address);
+
+    //override operatori
     bool operator==(const Location& other) const;
 };
 
