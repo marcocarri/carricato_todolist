@@ -1,5 +1,7 @@
 #include "../inc/ToDoList.h"
 
+#include <fstream>
+#include <iostream>
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
@@ -51,4 +53,37 @@ Task& ToDoList::getTask(size_t index) {
         throw std::out_of_range("Indice task non valido.");
     }
     return tasks.at(index);
+}
+
+void ToDoList::saveToFile() const {
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        for (const auto& task : tasks) {
+            task.save(file);
+        }
+        file.close();
+    } else {
+        cerr << "ERRORE: Impossibile aprire il file per il salvataggio." << endl;
+    }
+}
+void ToDoList::loadFromFile() {
+    std::ifstream file(filename);
+    if (file.is_open()) {
+        tasks.clear();
+        std::string templine;
+        while (std::getline(file,templine)) {
+            if (templine.empty()) continue;
+            std::stringstream linestream(templine);
+            try {
+                Task temp("Placeholder",DateTime(1,1,1582,00,00,00),Location("Placeholder"));
+                temp.load(linestream);
+                if (!linestream.fail()) { tasks.push_back(temp); }
+            } catch (const std::invalid_argument& e) {
+                cerr << "Skipping corrupted task line (Invalid Data): " << e.what() << endl;
+            } catch (const std::runtime_error& e) {
+                cerr << "Skipping corrupted task line: " << e.what() << endl;
+            }
+        }
+        file.close();
+    }
 }
