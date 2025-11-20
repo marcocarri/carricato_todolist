@@ -3,7 +3,7 @@
 #include <sstream>
 
 //costruttore
-Task::Task(const std::string& description,const DateTime& date_time,const Location& location) : description(description),date_time(date_time),location(location) {}
+Task::Task(const std::string& description,const DateTime& date_time,const Location& location) : description(description),completed(false),date_time(date_time),location(location) {}
 
 //toString
 std::string Task::toString() const { //stampo la task nel formato --> Date & Time: GG-MM-AAAA HH:MM:SS; Location: location; Completed: 1/0; Description: description
