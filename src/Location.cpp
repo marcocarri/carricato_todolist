@@ -1,4 +1,5 @@
 #include "../inc/Location.h"
+
 #include <sstream>
 
 Location::Location(const std::string &address) : address(address) {}

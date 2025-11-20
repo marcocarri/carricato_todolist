@@ -1,4 +1,5 @@
 #include "../inc/Task.h"
+
 #include <sstream>
 
 Task::Task(const std::string& description,const DateTime& date_time,const Location& location) : description(description),date_time(date_time),location(location) {}
