@@ -73,6 +73,33 @@ std::vector<Task> ToDoList::getSortedTasksByDateTimeAscending() const {
     );
     return sortedTasks;
 }
+std::vector<Task> ToDoList::getFilteredTasksByCompleted(bool completed) const {
+    std::vector<Task> filteredTasks;
+    for (const auto& task : tasks) {
+        if (task.isCompleted()==completed) {
+            filteredTasks.push_back(task);
+        }
+    }
+    return filteredTasks;
+}
+std::vector<Task> ToDoList::getFilteredTasksByDate(const Date& date) const {
+    std::vector<Task> filteredTasks;
+    for (const auto& task : tasks) {
+        if (task.getDateTime().getDate()==date) {
+            filteredTasks.push_back(task);
+        }
+    }
+    return filteredTasks;
+}
+std::vector<Task> ToDoList::getFilteredTasksByLocation(const Location& location) const {
+    std::vector<Task> filteredTasks;
+    for (const auto& task : tasks) {
+        if (task.getLocation()==location) {
+            filteredTasks.push_back(task);
+        }
+    }
+    return filteredTasks;
+}
 
 void ToDoList::saveToFile() const {
     std::ofstream file(filename);
