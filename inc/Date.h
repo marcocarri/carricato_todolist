@@ -12,6 +12,7 @@ private:
 public:
     Date(int day,int month,int year);
     Date(const Date& date);
+    Date(const std::string& date);
     std::string toString() const;
     int getDay() const;
     int getMonth() const;

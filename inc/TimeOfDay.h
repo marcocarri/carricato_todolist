@@ -12,6 +12,7 @@ private:
 public:
     TimeOfDay(int hour,int minute,int second);
     TimeOfDay(const TimeOfDay& time);
+    TimeOfDay(const std::string& time);
     std::string toString() const;
     int getHour() const;
     int getMinute() const;
