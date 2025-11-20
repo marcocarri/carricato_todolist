@@ -3,4 +3,10 @@ project(carricato_todolist)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(carricato_todolist main.cpp)
+add_executable(carricato_todolist main.cpp
+        inc/Task.h
+        inc/ToDoList.h
+        src/Task.cpp
+        src/ToDoList.cpp
+
+)
