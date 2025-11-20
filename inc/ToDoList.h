@@ -22,6 +22,11 @@ public:
     void addTask(const std::string& description,const DateTime& date_time,const Location& location);
     void removeTask(size_t index);
     Task& getTask(size_t index);
+    std::vector<Task> getSortedTasksByDateTimeDescending() const;
+    std::vector<Task> getSortedTasksByDateTimeAscending() const;
+    std::vector<Task> getFilteredTasksByCompleted(bool completed) const;
+    std::vector<Task> getFilteredTasksByDate(const Date& date) const;
+    std::vector<Task> getFilteredTasksByLocation(const Location& location) const;
 
     void saveToFile() const;
     void loadFromFile();
